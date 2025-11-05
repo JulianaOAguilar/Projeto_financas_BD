@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             groupBox1 = new GroupBox();
             data = new DateTimePicker();
             debitBtn = new Button();
@@ -46,9 +47,21 @@
             filterBtn = new Button();
             filterInput = new TextBox();
             dataGridView1 = new DataGridView();
+            groupBox = new GroupBox();
+            dateTimePicker1 = new DateTimePicker();
+            button2 = new Button();
+            textBox1 = new TextBox();
+            label4 = new Label();
+            label5 = new Label();
+            label6 = new Label();
+            textBox2 = new TextBox();
+            label7 = new Label();
+            textBox3 = new TextBox();
+            button1 = new Button();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            groupBox.SuspendLayout();
             SuspendLayout();
             // 
             // groupBox1
@@ -64,7 +77,7 @@
             groupBox1.Controls.Add(inputValue);
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(inputName);
-            groupBox1.Location = new Point(69, 44);
+            groupBox1.Location = new Point(46, 23);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(247, 280);
             groupBox1.TabIndex = 0;
@@ -173,7 +186,7 @@
             groupBox2.Controls.Add(filterBtn);
             groupBox2.Controls.Add(filterInput);
             groupBox2.Controls.Add(dataGridView1);
-            groupBox2.Location = new Point(348, 44);
+            groupBox2.Location = new Point(320, 23);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(353, 280);
             groupBox2.TabIndex = 1;
@@ -240,12 +253,125 @@
             dataGridView1.Size = new Size(304, 171);
             dataGridView1.TabIndex = 2;
             // 
+            // groupBox
+            // 
+            groupBox.BackColor = Color.Moccasin;
+            groupBox.Controls.Add(button1);
+            groupBox.Controls.Add(dateTimePicker1);
+            groupBox.Controls.Add(button2);
+            groupBox.Controls.Add(textBox1);
+            groupBox.Controls.Add(label4);
+            groupBox.Controls.Add(label5);
+            groupBox.Controls.Add(label6);
+            groupBox.Controls.Add(textBox2);
+            groupBox.Controls.Add(label7);
+            groupBox.Controls.Add(textBox3);
+            groupBox.Location = new Point(46, 335);
+            groupBox.Name = "groupBox";
+            groupBox.Size = new Size(627, 171);
+            groupBox.TabIndex = 10;
+            groupBox.TabStop = false;
+            groupBox.Text = "editar (adicionar feature)";
+            // 
+            // dateTimePicker1
+            // 
+            dateTimePicker1.Cursor = Cursors.Hand;
+            dateTimePicker1.Location = new Point(68, 65);
+            dateTimePicker1.MinDate = new DateTime(2025, 11, 5, 0, 0, 0, 0);
+            dateTimePicker1.Name = "dateTimePicker1";
+            dateTimePicker1.Size = new Size(114, 23);
+            dateTimePicker1.TabIndex = 2;
+            dateTimePicker1.Value = new DateTime(2025, 11, 28, 0, 0, 0, 0);
+            // 
+            // button2
+            // 
+            button2.Cursor = Cursors.Hand;
+            button2.Location = new Point(38, 129);
+            button2.Name = "button2";
+            button2.Size = new Size(75, 23);
+            button2.TabIndex = 8;
+            button2.Text = "Salvar";
+            button2.UseVisualStyleBackColor = true;
+            // 
+            // textBox1
+            // 
+            textBox1.Cursor = Cursors.IBeam;
+            textBox1.Location = new Point(263, 68);
+            textBox1.Multiline = true;
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(150, 84);
+            textBox1.TabIndex = 7;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(199, 68);
+            label4.Name = "label4";
+            label4.Size = new Size(58, 15);
+            label4.TabIndex = 6;
+            label4.Text = "Descrição";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(31, 71);
+            label5.Name = "label5";
+            label5.Size = new Size(31, 15);
+            label5.TabIndex = 4;
+            label5.Text = "Data";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(235, 25);
+            label6.Name = "label6";
+            label6.Size = new Size(33, 15);
+            label6.TabIndex = 3;
+            label6.Text = "Valor";
+            // 
+            // textBox2
+            // 
+            textBox2.Cursor = Cursors.IBeam;
+            textBox2.Location = new Point(274, 22);
+            textBox2.Name = "textBox2";
+            textBox2.Size = new Size(139, 23);
+            textBox2.TabIndex = 2;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(31, 27);
+            label7.Name = "label7";
+            label7.Size = new Size(40, 15);
+            label7.TabIndex = 1;
+            label7.Text = "Nome";
+            // 
+            // textBox3
+            // 
+            textBox3.Cursor = Cursors.IBeam;
+            textBox3.Location = new Point(77, 22);
+            textBox3.Name = "textBox3";
+            textBox3.Size = new Size(101, 23);
+            textBox3.TabIndex = 0;
+            // 
+            // button1
+            // 
+            button1.Cursor = Cursors.Hand;
+            button1.Location = new Point(119, 129);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 23);
+            button1.TabIndex = 9;
+            button1.Text = "Excluir";
+            button1.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.LemonChiffon;
-            ClientSize = new Size(774, 368);
+            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
+            ClientSize = new Size(726, 785);
+            Controls.Add(groupBox);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Name = "Form1";
@@ -257,6 +383,8 @@
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            groupBox.ResumeLayout(false);
+            groupBox.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -281,5 +409,16 @@
         private Label balanceLabel;
         private Label saldo;
         private DateTimePicker data;
+        private GroupBox groupBox;
+        private Button button1;
+        private DateTimePicker dateTimePicker1;
+        private Button button2;
+        private TextBox textBox1;
+        private Label label4;
+        private Label label5;
+        private Label label6;
+        private TextBox textBox2;
+        private Label label7;
+        private TextBox textBox3;
     }
 }
