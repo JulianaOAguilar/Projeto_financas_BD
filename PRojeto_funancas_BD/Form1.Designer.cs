@@ -41,7 +41,7 @@
             inputName = new TextBox();
             groupBox2 = new GroupBox();
             balanceLabel = new Label();
-            label4 = new Label();
+            saldo = new Label();
             consultBtn = new Button();
             filterBtn = new Button();
             filterInput = new TextBox();
@@ -53,6 +53,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.BackColor = Color.Moccasin;
             groupBox1.Controls.Add(data);
             groupBox1.Controls.Add(debitBtn);
             groupBox1.Controls.Add(creditBtn);
@@ -72,6 +73,7 @@
             // 
             // data
             // 
+            data.Cursor = Cursors.Hand;
             data.Location = new Point(95, 114);
             data.MinDate = new DateTime(2025, 11, 5, 0, 0, 0, 0);
             data.Name = "data";
@@ -81,6 +83,7 @@
             // 
             // debitBtn
             // 
+            debitBtn.Cursor = Cursors.Hand;
             debitBtn.Location = new Point(152, 247);
             debitBtn.Name = "debitBtn";
             debitBtn.Size = new Size(75, 23);
@@ -91,6 +94,7 @@
             // 
             // creditBtn
             // 
+            creditBtn.Cursor = Cursors.Hand;
             creditBtn.Location = new Point(77, 247);
             creditBtn.Name = "creditBtn";
             creditBtn.Size = new Size(75, 23);
@@ -101,6 +105,7 @@
             // 
             // descriptionInput
             // 
+            descriptionInput.Cursor = Cursors.IBeam;
             descriptionInput.Location = new Point(77, 153);
             descriptionInput.Multiline = true;
             descriptionInput.Name = "descriptionInput";
@@ -136,6 +141,7 @@
             // 
             // inputValue
             // 
+            inputValue.Cursor = Cursors.IBeam;
             inputValue.Location = new Point(77, 66);
             inputValue.Name = "inputValue";
             inputValue.Size = new Size(150, 23);
@@ -152,6 +158,7 @@
             // 
             // inputName
             // 
+            inputName.Cursor = Cursors.IBeam;
             inputName.Location = new Point(77, 22);
             inputName.Name = "inputName";
             inputName.Size = new Size(150, 23);
@@ -159,8 +166,9 @@
             // 
             // groupBox2
             // 
+            groupBox2.BackColor = Color.Moccasin;
             groupBox2.Controls.Add(balanceLabel);
-            groupBox2.Controls.Add(label4);
+            groupBox2.Controls.Add(saldo);
             groupBox2.Controls.Add(consultBtn);
             groupBox2.Controls.Add(filterBtn);
             groupBox2.Controls.Add(filterInput);
@@ -171,26 +179,33 @@
             groupBox2.TabIndex = 1;
             groupBox2.TabStop = false;
             groupBox2.Text = "consulta";
+            groupBox2.Enter += groupBox2_Enter;
             // 
             // balanceLabel
             // 
             balanceLabel.AutoSize = true;
-            balanceLabel.Location = new Point(98, 251);
+            balanceLabel.BackColor = Color.BurlyWood;
+            balanceLabel.Location = new Point(102, 245);
             balanceLabel.Name = "balanceLabel";
-            balanceLabel.Size = new Size(0, 15);
+            balanceLabel.Padding = new Padding(5);
+            balanceLabel.Size = new Size(10, 25);
             balanceLabel.TabIndex = 14;
+            balanceLabel.Click += balanceLabel_Click;
             // 
-            // label4
+            // saldo
             // 
-            label4.AutoSize = true;
-            label4.Location = new Point(22, 251);
-            label4.Name = "label4";
-            label4.Size = new Size(70, 15);
-            label4.TabIndex = 10;
-            label4.Text = "Saldo Atual:";
+            saldo.AutoSize = true;
+            saldo.BackColor = Color.BurlyWood;
+            saldo.Location = new Point(22, 245);
+            saldo.Name = "saldo";
+            saldo.Padding = new Padding(5);
+            saldo.Size = new Size(80, 25);
+            saldo.TabIndex = 10;
+            saldo.Text = "Saldo Atual:";
             // 
             // consultBtn
             // 
+            consultBtn.Cursor = Cursors.Hand;
             consultBtn.Location = new Point(22, 36);
             consultBtn.Name = "consultBtn";
             consultBtn.Size = new Size(141, 23);
@@ -200,6 +215,7 @@
             // 
             // filterBtn
             // 
+            filterBtn.Cursor = Cursors.Hand;
             filterBtn.Location = new Point(169, 36);
             filterBtn.Name = "filterBtn";
             filterBtn.Size = new Size(51, 23);
@@ -209,6 +225,7 @@
             // 
             // filterInput
             // 
+            filterInput.Cursor = Cursors.IBeam;
             filterInput.Location = new Point(226, 37);
             filterInput.Name = "filterInput";
             filterInput.Size = new Size(100, 23);
@@ -216,6 +233,7 @@
             // 
             // dataGridView1
             // 
+            dataGridView1.BackgroundColor = Color.BurlyWood;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Location = new Point(22, 66);
             dataGridView1.Name = "dataGridView1";
@@ -226,11 +244,13 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1027, 635);
+            BackColor = Color.LemonChiffon;
+            ClientSize = new Size(774, 368);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Name = "Form1";
-            Text = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Controle Financeiro";
             Load += Form1_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
@@ -259,7 +279,7 @@
         private DataGridView dataGridView1;
         private Button consultBtn;
         private Label balanceLabel;
-        private Label label4;
+        private Label saldo;
         private DateTimePicker data;
     }
 }

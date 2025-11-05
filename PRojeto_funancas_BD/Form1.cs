@@ -181,7 +181,15 @@ namespace PRojeto_funancas_BD
                 MessageBox.Show("Falha ao cadastrar a transação.");
         }
 
+        private void groupBox2_Enter(object sender, EventArgs e)
+        {
 
+        }
+
+        private void balanceLabel_Click(object sender, EventArgs e)
+        {
+
+        }
     }
-    }
+}
 
