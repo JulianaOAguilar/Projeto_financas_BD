@@ -8,10 +8,10 @@ namespace PRojeto_funancas_BD
 {
     public partial class Form1 : Form
     {
-        // ✅ Lista de transações no nível da classe
+        // cria uma lista, variável do saldo e tabela transacoes (para o filtro)
         private List<Transacao> listaTransacoes = new List<Transacao>();
-
-        float balance = 0.00f;
+        private float balance = 0.00f;
+        private DataTable tabelaTransacoes;
 
         public Form1()
         {
@@ -21,77 +21,26 @@ namespace PRojeto_funancas_BD
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            //desativar edição da tabela
+            saveBtn.Enabled = false;
+            deleteBtn.Enabled = false;
             data.Format = DateTimePickerFormat.Custom;
             data.CustomFormat = "dd/MM/yyyy";
+
+            dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView.AllowUserToAddRows = false;
+            dataGridView.EditMode = DataGridViewEditMode.EditOnEnter;
+            dataGridView.ReadOnly = false;
         }
 
+        // função para definir a operação (soma ou subtração)
         private void alterarValor(float delta)
         {
             balance += delta;
             balanceLabel.Text = balance.ToString("C2");
         }
 
-        // ==================== CLASSES ====================
-        public class Banco
-        {
-            private string stringConexao = @"Data Source=localhost;Initial Catalog=financeiroDB;Integrated Security=True;";
-            private SqlConnection cn;
-
-            private void conexao()
-            {
-                cn = new SqlConnection(stringConexao);
-            }
-
-            public SqlConnection abrirConexao()
-            {
-                try
-                {
-                    conexao();
-                    cn.Open();
-                    return cn;
-                }
-                catch
-                {
-                    return null;
-                }
-            }
-
-            public void fecharConexao()
-            {
-                try { cn.Close(); }
-                catch { }
-            }
-
-            public bool InserirTransacao(Transacao transacao)
-            {
-                try
-                {
-                    SqlConnection conn = abrirConexao();
-                    if (conn != null)
-                    {
-                        string query = "INSERT INTO transacoes (tipo, valor, dataS, descricao) " +
-                                       "VALUES (@tipo, @valor, @dataS, @descricao)";
-
-                        SqlCommand command = new SqlCommand(query, conn);
-                        command.Parameters.AddWithValue("@tipo", transacao.Tipo);
-                        command.Parameters.AddWithValue("@valor", transacao.Valor);
-                        command.Parameters.AddWithValue("@dataS", transacao.Data);
-                        command.Parameters.AddWithValue("@descricao", transacao.Descricao);
-
-                        int rowsAffected = command.ExecuteNonQuery();
-
-                        return rowsAffected > 0;
-                    }
-                    return false;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Erro ao inserir transação: " + ex.Message);
-                    return false;
-                }
-            }
-        }
-
+        // cria um objeto transação
         public class Transacao
         {
             public string Tipo { get; set; }
@@ -101,7 +50,45 @@ namespace PRojeto_funancas_BD
             public string Descricao { get; set; }
         }
 
-        private void creditBtn_Click(object sender, EventArgs e)
+        //carrega transações na tabela
+        private void CarregarTransacoes()
+        {
+            Banco banco = new Banco();
+            DataTable dados = banco.BuscarTransacoes();
+            if (dados != null)
+            {
+                tabelaTransacoes = dados; // guarda globalmente
+                dataGridView.DataSource = tabelaTransacoes;
+
+                // Bloqueia todas as células
+                foreach (DataGridViewRow row in dataGridView.Rows)
+                    foreach (DataGridViewCell cell in row.Cells)
+                        cell.ReadOnly = true;
+            }
+
+            // Atualiza saldo
+            float saldoAtual = 0f;
+            if (dados != null)
+            {
+                foreach (DataRow row in dados.Rows)
+                {
+                    float valor = Convert.ToSingle(row["valor"]);
+                    string tipo = row["tipo"].ToString();
+                    saldoAtual += (tipo == "Crédito") ? valor : -valor;
+                }
+            }
+
+            balance = saldoAtual;
+            balanceLabel.Text = balance.ToString("C2");
+        }
+
+        // operações de salvar ao clicar nos botões)
+        private void creditBtn_Click(object sender, EventArgs e) => InserirTransacao("Crédito");
+        private void debitBtn_Click(object sender, EventArgs e) => InserirTransacao("Debito");
+
+
+        // insere uma transação a partir dos campos do form
+        private void InserirTransacao(string tipo)
         {
             string nome = inputName.Text;
             DateTime dataSelected = data.Value;
@@ -119,11 +106,11 @@ namespace PRojeto_funancas_BD
                 return;
             }
 
-            alterarValor(valor);
+            alterarValor(tipo == "Crédito" ? valor : -valor);
 
             Transacao transacao = new Transacao
             {
-                Tipo = "Crédito",
+                Tipo = tipo,
                 Nome = nome,
                 Valor = valor,
                 Data = dataSelected,
@@ -134,62 +121,153 @@ namespace PRojeto_funancas_BD
 
             Banco banco = new Banco();
             bool sucesso = banco.InserirTransacao(transacao);
-
-            if (sucesso)
-                MessageBox.Show("Transação cadastrada com sucesso!");
-            else
-                MessageBox.Show("Falha ao cadastrar a transação.");
+            MessageBox.Show(sucesso ? "Transação cadastrada com sucesso!" : "Falha ao cadastrar a transação.");
+            inputName.Clear();
+            inputValue.Clear();
+            descriptionInput.Clear();
         }
 
-        private void debitBtn_Click(object sender, EventArgs e)
-        {
-            string nome = inputName.Text;
-            DateTime dataSelected = data.Value;
-            string descricao = descriptionInput.Text;
 
-            if (string.IsNullOrEmpty(nome) || string.IsNullOrEmpty(descricao))
+        private void consultBtn_Click(object sender, EventArgs e) => CarregarTransacoes();
+
+        // permite campos editaveis
+        private void editBtn_Click(object sender, EventArgs e)
+        {
+            if (dataGridView.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Preencha todos os campos!");
+                MessageBox.Show("Selecione uma transação para editar!");
                 return;
             }
 
-            if (!float.TryParse(inputValue.Text, out float valor) || valor <= 0)
+            DataGridViewRow row = dataGridView.SelectedRows[0];
+
+            // Desbloqueia células editáveis
+            row.Cells["valor"].ReadOnly = false;
+            row.Cells["descricao"].ReadOnly = false;
+            row.Cells["nome"].ReadOnly = false;
+
+            deleteBtn.Enabled = true;
+            saveBtn.Enabled = true;
+            groupBox1.Enabled = false;
+            consultBtn.Enabled = false;
+
+            dataGridView.CurrentCell = row.Cells["valor"];
+            dataGridView.BeginEdit(true);
+
+            MessageBox.Show("Edite os valores diretamente na linha e clique em Salvar.");
+        }
+
+        //salva edições
+        private void saveBtn_Click(object sender, EventArgs e)
+        {
+            if (dataGridView.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Valor inválido!");
+                MessageBox.Show("Selecione uma linha para salvar!");
                 return;
             }
 
-            alterarValor(-valor);
+            DataGridViewRow row = dataGridView.SelectedRows[0];
 
-            Transacao transacao = new Transacao
+            try
             {
-                Tipo = "Debito",
-                Nome = nome,
-                Valor = valor,
-                Data = dataSelected,
-                Descricao = descricao
-            };
+                int id = Convert.ToInt32(row.Cells["id"].Value);
+                float novoValor = Convert.ToSingle(row.Cells["valor"].Value);
+                string novaDescricao = row.Cells["descricao"].Value.ToString();
+                string novoNome = row.Cells["nome"].Value.ToString();
 
-            listaTransacoes.Add(transacao);
+                Banco banco = new Banco();
+                bool sucesso = banco.AtualizarTransacao(id, novoNome, novoValor, novaDescricao);
 
-            Banco banco = new Banco();
-            bool sucesso = banco.InserirTransacao(transacao);
+                if (sucesso)
+                {
+                    MessageBox.Show("Transação atualizada com sucesso!");
+                    CarregarTransacoes();
+                }
+                else
+                {
+                    MessageBox.Show("Falha ao atualizar transação.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro: " + ex.Message);
+            }
+            finally
+            {
+                // Bloqueia todas as células novamente
+                foreach (DataGridViewRow r in dataGridView.Rows)
+                    foreach (DataGridViewCell c in r.Cells)
+                        c.ReadOnly = true;
 
-            if (sucesso)
-                MessageBox.Show("Transação cadastrada com sucesso!");
-            else
-                MessageBox.Show("Falha ao cadastrar a transação.");
+                saveBtn.Enabled = false;
+                deleteBtn.Enabled = false;
+
+                groupBox1.Enabled = true;
+                consultBtn.Enabled = true;
+            }
         }
 
-        private void groupBox2_Enter(object sender, EventArgs e)
+        // filtro
+        private void FiltrarPorNome(string nome)
         {
+            if (tabelaTransacoes == null) return;
 
+            DataView dv = new DataView(tabelaTransacoes);
+            dv.RowFilter = string.IsNullOrEmpty(nome) ? "" : $"nome LIKE '%{nome.Replace("'", "''")}%'";
+
+            dataGridView.DataSource = dv;
+
+            // Bloqueia células
+            foreach (DataGridViewRow row in dataGridView.Rows)
+                foreach (DataGridViewCell cell in row.Cells)
+                    cell.ReadOnly = true;
         }
 
-        private void balanceLabel_Click(object sender, EventArgs e)
+        private void filterInput_TextChanged(object sender, EventArgs e)
         {
+            FiltrarPorNome(filterInput.Text.Trim());
+        }
 
+        private void deleteBtn_Click(object sender, EventArgs e)
+        {
+            if (dataGridView.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selecione uma transação para deletar!");
+                return;
+            }
+
+            // Confirmação antes de excluir
+            DialogResult resultado = MessageBox.Show(
+                "Tem certeza que deseja deletar esta transação?",
+                "Confirmação",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+
+            if (resultado == DialogResult.No) return;
+
+            try
+            {
+                DataGridViewRow row = dataGridView.SelectedRows[0];
+                int id = Convert.ToInt32(row.Cells["id"].Value); // pega o ID
+
+                Banco banco = new Banco();
+                bool sucesso = banco.DeletarTransacao(id); // método que criamos no Banco.cs
+
+                if (sucesso)
+                {
+                    MessageBox.Show("Transação deletada com sucesso!");
+                    CarregarTransacoes(); // atualiza DataGridView e saldo
+                }
+                else
+                {
+                    MessageBox.Show("Falha ao deletar a transação.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao deletar: " + ex.Message);
+            }
         }
     }
 }
-

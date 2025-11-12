@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             groupBox1 = new GroupBox();
             data = new DateTimePicker();
             debitBtn = new Button();
@@ -40,15 +41,18 @@
             label1 = new Label();
             inputName = new TextBox();
             groupBox2 = new GroupBox();
+            deleteBtn = new Button();
+            saveBtn = new Button();
+            editBtn = new Button();
             balanceLabel = new Label();
             saldo = new Label();
             consultBtn = new Button();
             filterBtn = new Button();
             filterInput = new TextBox();
-            dataGridView1 = new DataGridView();
+            dataGridView = new DataGridView();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             SuspendLayout();
             // 
             // groupBox1
@@ -64,9 +68,9 @@
             groupBox1.Controls.Add(inputValue);
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(inputName);
-            groupBox1.Location = new Point(69, 44);
+            groupBox1.Location = new Point(12, 339);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(247, 280);
+            groupBox1.Size = new Size(428, 162);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "formulário";
@@ -74,17 +78,17 @@
             // data
             // 
             data.Cursor = Cursors.Hand;
-            data.Location = new Point(95, 114);
+            data.Location = new Point(77, 114);
             data.MinDate = new DateTime(2025, 11, 5, 0, 0, 0, 0);
             data.Name = "data";
-            data.Size = new Size(114, 23);
+            data.Size = new Size(150, 23);
             data.TabIndex = 2;
             data.Value = new DateTime(2025, 11, 28, 0, 0, 0, 0);
             // 
             // debitBtn
             // 
             debitBtn.Cursor = Cursors.Hand;
-            debitBtn.Location = new Point(152, 247);
+            debitBtn.Location = new Point(332, 114);
             debitBtn.Name = "debitBtn";
             debitBtn.Size = new Size(75, 23);
             debitBtn.TabIndex = 9;
@@ -95,7 +99,7 @@
             // creditBtn
             // 
             creditBtn.Cursor = Cursors.Hand;
-            creditBtn.Location = new Point(77, 247);
+            creditBtn.Location = new Point(251, 114);
             creditBtn.Name = "creditBtn";
             creditBtn.Size = new Size(75, 23);
             creditBtn.TabIndex = 8;
@@ -106,16 +110,16 @@
             // descriptionInput
             // 
             descriptionInput.Cursor = Cursors.IBeam;
-            descriptionInput.Location = new Point(77, 153);
+            descriptionInput.Location = new Point(268, 45);
             descriptionInput.Multiline = true;
             descriptionInput.Name = "descriptionInput";
-            descriptionInput.Size = new Size(150, 84);
+            descriptionInput.Size = new Size(139, 57);
             descriptionInput.TabIndex = 7;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(13, 153);
+            label3.Location = new Point(268, 22);
             label3.Name = "label3";
             label3.Size = new Size(58, 15);
             label3.TabIndex = 6;
@@ -167,19 +171,54 @@
             // groupBox2
             // 
             groupBox2.BackColor = Color.Moccasin;
+            groupBox2.Controls.Add(deleteBtn);
+            groupBox2.Controls.Add(saveBtn);
+            groupBox2.Controls.Add(editBtn);
             groupBox2.Controls.Add(balanceLabel);
             groupBox2.Controls.Add(saldo);
             groupBox2.Controls.Add(consultBtn);
             groupBox2.Controls.Add(filterBtn);
             groupBox2.Controls.Add(filterInput);
-            groupBox2.Controls.Add(dataGridView1);
-            groupBox2.Location = new Point(348, 44);
+            groupBox2.Controls.Add(dataGridView);
+            groupBox2.Location = new Point(12, 37);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(353, 280);
+            groupBox2.Size = new Size(657, 280);
             groupBox2.TabIndex = 1;
             groupBox2.TabStop = false;
             groupBox2.Text = "consulta";
-            groupBox2.Enter += groupBox2_Enter;
+            // 
+            // deleteBtn
+            // 
+            deleteBtn.Cursor = Cursors.Hand;
+            deleteBtn.Location = new Point(417, 243);
+            deleteBtn.Name = "deleteBtn";
+            deleteBtn.Size = new Size(102, 23);
+            deleteBtn.TabIndex = 17;
+            deleteBtn.Text = "Excluir";
+            deleteBtn.UseVisualStyleBackColor = true;
+            deleteBtn.Click += deleteBtn_Click;
+            // 
+            // saveBtn
+            // 
+            saveBtn.Cursor = Cursors.Hand;
+            saveBtn.Location = new Point(525, 243);
+            saveBtn.Name = "saveBtn";
+            saveBtn.Size = new Size(90, 23);
+            saveBtn.TabIndex = 16;
+            saveBtn.Text = "Salvar edições";
+            saveBtn.UseVisualStyleBackColor = true;
+            saveBtn.Click += saveBtn_Click;
+            // 
+            // editBtn
+            // 
+            editBtn.Cursor = Cursors.Hand;
+            editBtn.Location = new Point(441, 36);
+            editBtn.Name = "editBtn";
+            editBtn.Size = new Size(137, 23);
+            editBtn.TabIndex = 15;
+            editBtn.Text = "Editar Tabela";
+            editBtn.UseVisualStyleBackColor = true;
+            editBtn.Click += editBtn_Click;
             // 
             // balanceLabel
             // 
@@ -190,7 +229,6 @@
             balanceLabel.Padding = new Padding(5);
             balanceLabel.Size = new Size(10, 25);
             balanceLabel.TabIndex = 14;
-            balanceLabel.Click += balanceLabel_Click;
             // 
             // saldo
             // 
@@ -212,6 +250,7 @@
             consultBtn.TabIndex = 13;
             consultBtn.Text = "Consultar transações";
             consultBtn.UseVisualStyleBackColor = true;
+            consultBtn.Click += consultBtn_Click;
             // 
             // filterBtn
             // 
@@ -228,24 +267,26 @@
             filterInput.Cursor = Cursors.IBeam;
             filterInput.Location = new Point(226, 37);
             filterInput.Name = "filterInput";
-            filterInput.Size = new Size(100, 23);
+            filterInput.Size = new Size(162, 23);
             filterInput.TabIndex = 10;
+            filterInput.TextChanged += filterInput_TextChanged;
             // 
-            // dataGridView1
+            // dataGridView
             // 
-            dataGridView1.BackgroundColor = Color.BurlyWood;
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(22, 66);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(304, 171);
-            dataGridView1.TabIndex = 2;
+            dataGridView.BackgroundColor = Color.BurlyWood;
+            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView.Location = new Point(22, 66);
+            dataGridView.Name = "dataGridView";
+            dataGridView.Size = new Size(593, 171);
+            dataGridView.TabIndex = 2;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.LemonChiffon;
-            ClientSize = new Size(774, 368);
+            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
+            ClientSize = new Size(726, 785);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Name = "Form1";
@@ -256,7 +297,7 @@
             groupBox1.PerformLayout();
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
             ResumeLayout(false);
         }
 
@@ -276,10 +317,13 @@
         private GroupBox groupBox2;
         private Button filterBtn;
         private TextBox filterInput;
-        private DataGridView dataGridView1;
+        private DataGridView dataGridView;
         private Button consultBtn;
         private Label balanceLabel;
         private Label saldo;
         private DateTimePicker data;
+        private Button editBtn;
+        private Button saveBtn;
+        private Button deleteBtn;
     }
 }
